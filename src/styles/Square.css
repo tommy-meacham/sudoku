@@ -1,0 +1,75 @@
+.Box {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	text-align: center;
+}
+
+.top {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	border-top: 1px solid black;
+}
+
+.bottom {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	border-bottom: 1px solid black;
+}
+
+.left {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	border-left: 1px solid black;
+}
+
+.right {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	border-right: 1px solid black;
+}
+
+.top-left {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+}
+
+.top-right {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	border-top: 1px solid black;
+	border-right: 1px solid black;
+}
+
+.bottom-left {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	border-bottom: 1px solid black;
+	border-left: 1px solid black;
+}
+
+.bottom-right {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+}
+
+.fill {
+	height: 20px;
+	width: 20px;
+	border: 1px solid #c3c3c3;
+	background-color: red;
+}
+
+

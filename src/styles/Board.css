@@ -1,0 +1,8 @@
+.Row {
+	display: flex;
+	justify-content: center;
+}
+
+.Left { 
+	 border-left: 2px solid black;
+}
