@@ -1,26 +1,37 @@
 import React, { Component } from 'react';
 import Board from './Board'
+import Solver from './Solver'
 
 class Sudoku extends Component {
 
 	constructor(props){
 		super(props);
+
+		var testCase = '004300209005009001070060043006002087190007400050083000600000105003508690042910300'
+
+		var temp = Array(81).fill(0);
+		for(var i=0;i<81;i++){
+			temp[i] = testCase[i]
+		}
+
 		this.state = {
-			squares: Array(81).fill(undefined),
+			squares:temp,
 			boxIndices: [0,3,6,27,30,33,54,57,60],
 			bgColors: Array(81).fill("white"),
 		};
+	}
 
-		this.changeSquareValue(0,"1");
-		this.changeSquareValue(9,"2");
-		this.changeSquareValue(18,"3");
-		this.changeSquareValue(27,"4");
-		this.changeSquareValue(36,"5");
-		this.changeSquareValue(45,"6");
-		this.changeSquareValue(54,"7");
-		this.changeSquareValue(63,"8");
-		this.changeSquareValue(72,"9");
-		this.changeSquareValue(80,"7");
+	solve(){
+		let solver = new Solver();
+		solver.setBoard(this.state.squares);
+
+		var temp = this.state.squares
+		var solved = solver.solve();
+
+		for(var i=0;i<81;i++){
+			this.changeSquareValue(i,solved[i])
+		}
+
 	}
 
 	changeSquareValue(index, value){
@@ -34,7 +45,7 @@ class Sudoku extends Component {
 		this.setState({
 			squares: current
 		});
-
+		// console.log(this.state.squares)
 		this.checkBoard();
 	}
 
@@ -42,6 +53,8 @@ class Sudoku extends Component {
 		var faulty = [];
 		this.changeBgColor([...Array(81).keys()],"white");
 		
+		
+
 		for(var i = 0; i<=8;i++){
 	  		var validRow = this.isRowValid(i);
 	  		var validCol = this.isColumnValid(i);
@@ -69,7 +82,6 @@ class Sudoku extends Component {
 			const endIndex = i*9 + 9;
 
 			temp = this.state.squares.slice(startIndex,endIndex);
-			// console.log(temp)
 		}
 		return this.itemsAreAllDifferent(temp);
 	}
@@ -107,9 +119,9 @@ class Sudoku extends Component {
 	itemsAreAllDifferent(temp){
 		var allDifferent = true;
 		for (var i = 0; i <=8; i++) {
-			if(temp[i] !== undefined){
+			if(temp[i] !== undefined & temp[i] !== 0){
 				for (var j = i+1; j <=8; j++) {	
-					if(temp[j] !== undefined){
+					if(temp[j] !== undefined & temp[j] != 0){
 						if((temp[i] != temp[j]) == 0){
 							allDifferent = false;
 						}
@@ -168,14 +180,43 @@ class Sudoku extends Component {
 		}
 	}	
 
+	handleClick() {
+		this.solve();
+	}
+
+	getBoxIndex(index) {
+		if(this.state.box0.includes(index)){
+			return 0;
+		} else if(this.state.box1.includes(index)){
+			return 1;
+		} else if(this.state.box2.includes(index)){
+			return 2;
+		} else if(this.state.box3.includes(index)){
+			return 3;
+		} else if(this.state.box4.includes(index)){
+			return 4;
+		} else if(this.state.box5.includes(index)){
+			return 5;
+		} else if(this.state.box6.includes(index)){
+			return 6;
+		} else if(this.state.box7.includes(index)){
+			return 7;
+		} else if(this.state.box8.includes(index)){
+			return 8;
+		} else {
+			return undefined;
+		}
+	}
+
+
+
   render() {
   	const s = this.state.squares;
   	const bg = this.state.bgColors;
-
-
     return (
       <div >
         <Board onChange={this.changeSquareValue.bind(this)} squares={s} bgColors={bg}/>
+        <button onClick={this.handleClick.bind(this)}>Solve</button>
       </div>
     );
   }

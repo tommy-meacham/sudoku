@@ -12,18 +12,6 @@ class Square extends Component {
 		};
 	}
 
-	handleClick = () => {
-		if(this.state.bgColor == 'white'){
-			this.setState({
-				bgColor:'blue',
-			})
-		}else{
-			this.setState({
-				bgColor:'white',
-			})
-		}
-	}
-
 	handleChange = (event) => {
 		this.props.onChange(this.state.index, event.target.value);
 	}
@@ -34,7 +22,7 @@ class Square extends Component {
 	      	className={this.props.className}
 	      	style={{backgroundColor:this.props.bgColor}}
 	      	onChange={this.handleChange}
-	      	value={this.props.value}
+	      	value={(this.props.value == "0") ? undefined : this.props.value}
 	      />
     );
   }
