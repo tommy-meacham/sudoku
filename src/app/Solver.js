@@ -121,6 +121,21 @@ class Solver {
 		}
 	}
 
+	getAdjacentRows(index){
+		var startIndices = [0,3,6]
+		var middleIndices = [1,4,7]
+		var endIndices = [2,5,8]
+		var row = Math.floor(index/9)
+
+		if(startIndices.includes(row)){
+			return [row+1,row+2]
+		}else if(middleIndices.includes(row)){
+			return [row-1,row+1]
+		}else if(endIndices.includes(row)){
+			return [row-1,row-2]
+		}
+	}
+
 	getBoxIndices(index) {
 		if(this.state.box0.includes(index)){
 			return this.state.box0;

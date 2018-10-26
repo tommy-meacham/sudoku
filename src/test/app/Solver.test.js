@@ -44,12 +44,17 @@ it('solve() only changes the first value when all others are filled in', () => {
 		.toEqual(['8', '6', '4', '3', '7', '1', '2', '5', '9', '3', '2', '5', '8', '4', '9', '7', '6', '1', '9', '7', '1', '2', '6', '5', '8', '4', '3', '4', '3', '6', '1', '9', '2', '5', '8', '7', '1', '9', '8', '6', '5', '7', '4', '3', '2', '2', '5', '7', '4', '8', '3', '9', '1', '6', '6', '8', '9', '7', '3', '4', '1', '2', '5', '7', '1', '3', '5', '2', '8', '6', '9', '4', '5', '4', '2', '9', '1', '6', '3', '7', '8'])
 });
 
-it('getAdjacentRows(9) returns [1,2] as adjacent rows', () => {
+it('getAdjacentCols(9) returns [1,2] as adjacent rows', () => {
 	let s = new Solver()
 	expect(s.getAdjacentCols(9)).toEqual( [1,2])
 });
 
-it('getAdjacentRows(12) returns [4,5] as adjacent rows', () => {
+it('getAdjacentCols(12) returns [4,5] as adjacent rows', () => {
 	let s = new Solver()
 	expect(s.getAdjacentCols(12)).toEqual( [4,5])
+});
+
+it('getAdjacentRows(12) returns [4,5] as adjacent rows', () => {
+	let s = new Solver()
+	expect(s.getAdjacentRows(12)).toEqual( [0,2])
 });
