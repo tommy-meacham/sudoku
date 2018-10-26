@@ -25,18 +25,32 @@ class Solver {
 	}
 
 	solve() {
-		return this.state.squares;
+		for(var i = 0;i<81;i++){
+			var currentSquare = this.state.squares[i]
+			if(currentSquare == '0'){
+				var possibleVals = this.findPossibleValues(i)
+				if(possibleVals.length === 1){
+					this.state.squares[i] = possibleVals[0]
+				} else {
+					for(var val in possibleVals){
+						var row_1 = Math.floor(i/9) + 1
+						var row_2 = Math.floor(i/9) + 2
+						var col_1 = Math.floor(i%9) + 1
+					}
+				}
+			}
+		}
+		return this.state.squares
 	}
 
 	findPossibleValues(index) {
 		const squareValue = this.state.squares[index]
 		const row = Math.floor(index/9)
 		const col = Math.floor(index%9)
-		const box = this.scanBox(index)
 		var possibleVals = []
 		possibleVals = possibleVals.concat(this.scanRow(row))
 		possibleVals = possibleVals.concat(this.scanCol(col))
-		possibleVals = possibleVals.concat(this.scanBox(box))
+		possibleVals = possibleVals.concat(this.scanBox(index))
 		return this.unique(possibleVals)
 
 	}
@@ -84,6 +98,27 @@ class Solver {
 			dedup.push(array[array.length-1])
 		}
 		return dedup
+	}
+
+	getAdjacentCols(index){
+		var startIndices = ['0','3','6']
+		var middleIndices = ['1','4','7']
+		var endIndices = ['2','5','8']
+		var col = Math.floor(index%9) / 9
+		var position;
+		if((col+'').split('.').length === 1){
+			position = (col+'').split('.')[0]
+		}else{
+			position = (col+'').split('.')[1][0]
+		}
+
+		if(startIndices.includes(position)){
+			return [Math.floor(index%9)+1,Math.floor(index%9)+2]
+		}else if(middleIndices.includes(position)){
+			return [Math.floor(index%9)-1,Math.floor(index%9)+1]
+		}else if(endIndices.includes(position)){
+			return [Math.floor(index%9)-1,Math.floor(index%9)-2]
+		}
 	}
 
 	getBoxIndices(index) {
