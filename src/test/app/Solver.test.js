@@ -58,3 +58,9 @@ it('getAdjacentRows(12) returns [4,5] as adjacent rows', () => {
 	let s = new Solver()
 	expect(s.getAdjacentRows(12)).toEqual( [0,2])
 });
+
+it('getRow(3) returns values of row 3', () => {
+	let s = new Solver()
+	s.setBoard('064371259325849761971265843436192587198657432257483916689734125713528694542916378')
+	expect(s.getRow(3)).toEqual( ["4", "3", "6", "1", "9", "2", "5", "8", "7"])
+});

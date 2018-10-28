@@ -33,9 +33,10 @@ class Solver {
 					this.state.squares[i] = possibleVals[0]
 				} else {
 					for(var val in possibleVals){
-						var row_1 = Math.floor(i/9) + 1
-						var row_2 = Math.floor(i/9) + 2
-						var col_1 = Math.floor(i%9) + 1
+						var adjRows = this.getAdjacentRows(i)
+						var adjCols = this.getAdjacentCols(i)
+						
+
 					}
 				}
 			}
@@ -55,13 +56,11 @@ class Solver {
 
 	}
 
-	scanRow(row) {
-		const rowVals = this.state.squares.slice(row,row+9);
-		var possibleVals = ['1','2','3','4','5','6','7','8','9']
-		return possibleVals.filter(val => !rowVals.includes(val))
+	getRow(row) {
+		return this.state.squares.slice(row*9,row*9+9);
 	}
 
-	scanCol(col) {
+	getCol(col) {
 		var colVals = Array(9).fill(undefined);
 		if(col <= 9 & col >=0){
 			var stateIndex = 0;
@@ -70,6 +69,17 @@ class Solver {
 				colVals[j] = this.state.squares[stateIndex];
 			}
 		}
+		return colVals
+	}
+
+	scanRow(row) {
+		const rowVals = this.getRow(row)
+		var possibleVals = ['1','2','3','4','5','6','7','8','9']
+		return possibleVals.filter(val => !rowVals.includes(val))
+	}
+
+	scanCol(col) {
+		var colVals = this.getCol(col)
 		var possibleVals = ['1','2','3','4','5','6','7','8','9']
 		return possibleVals.filter(val => !colVals.includes(val))
 	}
