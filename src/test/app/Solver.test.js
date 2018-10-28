@@ -2,10 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Solver from '../../app/Solver'
 
-it('returns deduped array', ()=>{
+it('unique() returns deduped array', ()=>{
 	let s = new Solver()
 	expect(s.unique([1,2,2,3])).toEqual([1,2,3])
 });
+
+it('getEmptyIndices() returns all empty indices in the array', ()=>{
+	let s = new Solver()
+	expect(s.getEmptyIndices(['1','0','2','3','1','2','2','8','6','0'])).toEqual([1,9])
+});
+
 
 it('unique() returns deduped array', ()=>{
 	let s = new Solver()

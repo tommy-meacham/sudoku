@@ -50,6 +50,40 @@ class Solver {
 				}
 			}
 		}
+
+		//Check Rows with multiple empty squares
+		for(var i = 0;i<9;i++){
+			var index = i*9
+			var row = this.getRow(i)
+			var emptyIs = this.getEmptyIndices(row)
+			for(var current=0;current<emptyIs.length;current++){ 
+				var possibleVals = this.findPossibleValues(index+emptyIs[current])
+				var valSet = false
+				for(var k = 0;k<possibleVals.length;k++){
+					if(!valSet){
+						var val = possibleVals[k]
+						var checksum = Array(emptyIs.length).fill(0)
+						checksum[current] = 1
+						for(var j =0;j<emptyIs.length;j++){ 
+							if(j !== current){
+								var col = this.getCol(i)
+								if(col.includes(val)){
+									checksum[j] = 1
+								}
+							}
+						}
+						if(!checksum.inculdes(0)){
+							this.state.squares[i] = val
+						}
+					}
+				}
+			}
+		}
+
+		//Check Columns with multiple empty squares
+		for(var i = 0;i<9;i++){
+
+		}
 		return this.state.squares
 	}
 
@@ -180,6 +214,17 @@ class Solver {
 			return undefined;
 		}
 	}
+
+	getEmptyIndices(array) {
+		var emptyIndices = []
+		for(var i =0; i<array.length;i++){
+			if(array[i] === '0'){
+				emptyIndices = emptyIndices.concat([i])
+			}
+		}
+		return emptyIndices
+	}
 }
+
 
 export default Solver;
