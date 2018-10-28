@@ -27,16 +27,25 @@ class Solver {
 	solve() {
 		for(var i = 0;i<81;i++){
 			var currentSquare = this.state.squares[i]
-			if(currentSquare == '0'){
+			if(currentSquare === '0'){
 				var possibleVals = this.findPossibleValues(i)
+				// return this.findPossibleValues(54)
 				if(possibleVals.length === 1){
 					this.state.squares[i] = possibleVals[0]
 				} else {
-					for(var val in possibleVals){
-						var adjRows = this.getAdjacentRows(i)
-						var adjCols = this.getAdjacentCols(i)
-						
-
+					var valSet = false
+					for(var index=0;index<possibleVals.length;index++){
+						if(!valSet){
+							var adjRows = this.getAdjacentRows(i)
+							var adjCols = this.getAdjacentCols(i)
+							if(this.getRow(adjRows[0]).includes(possibleVals[index]) 
+								& this.getRow(adjRows[1]).includes(possibleVals[index])
+								& this.getCol(adjCols[0]).includes(possibleVals[index])
+								& this.getCol(adjCols[1]).includes(possibleVals[index])){
+								this.state.squares[i] = possibleVals[index]
+								valSet = true
+							}
+						}
 					}
 				}
 			}
@@ -49,27 +58,13 @@ class Solver {
 		const row = Math.floor(index/9)
 		const col = Math.floor(index%9)
 		var possibleVals = []
-		possibleVals = possibleVals.concat(this.scanRow(row))
-		possibleVals = possibleVals.concat(this.scanCol(col))
-		possibleVals = possibleVals.concat(this.scanBox(index))
-		return this.unique(possibleVals)
+		var rowVals = this.scanRow(row)
+		var colVals = this.scanCol(col)
+		var boxVals = this.scanBox(index)
+		possibleVals = rowVals.filter(val => -1 !== colVals.indexOf(val))
+		possibleVals = possibleVals.filter(val => -1 !== boxVals.indexOf(val))
+		return possibleVals
 
-	}
-
-	getRow(row) {
-		return this.state.squares.slice(row*9,row*9+9);
-	}
-
-	getCol(col) {
-		var colVals = Array(9).fill(undefined);
-		if(col <= 9 & col >=0){
-			var stateIndex = 0;
-			for (var j = 0; j <=8; j++) {
-				stateIndex = 9*j+col;
-				colVals[j] = this.state.squares[stateIndex];
-			}
-		}
-		return colVals
 	}
 
 	scanRow(row) {
@@ -87,12 +82,28 @@ class Solver {
 	scanBox(boxIndex){
 		var box = this.getBoxIndices(boxIndex)
 		var boxVals = Array(9).fill(undefined)
-		for(var i in box){
-			boxVals[i] = this.state.squares[i]
+		for(var i = 0;i<box.length;i++){
+			boxVals[i] = this.state.squares[box[i]]
 		}
 		var possibleVals = ['1','2','3','4','5','6','7','8','9']
 		return possibleVals.filter(val => !boxVals.includes(val))
 
+	}
+
+	getRow(row) {
+		return this.state.squares.slice(row*9,row*9+9);
+	}
+
+	getCol(col) {
+		var colVals = Array(9).fill(undefined);
+		if(col <= 9 & col >=0){
+			var stateIndex = 0;
+			for (var j = 0; j <=8; j++) {
+				stateIndex = 9*j+col;
+				colVals[j] = this.state.squares[stateIndex];
+			}
+		}
+		return colVals
 	}
 
 	unique(array) {
