@@ -18,6 +18,10 @@ class Solver {
 		};
 	}
 
+	getBoard() {
+		return this.state.squares
+	}
+
 	setBoard(board) {
 		for(var i = 0; i<board.length;i++){
 			this.state.squares[i] = board[i];
@@ -25,6 +29,17 @@ class Solver {
 	}
 
 	solve() {
+		this.fillIndividualSquares()
+
+		// //Check Rows with multiple empty squares
+		this.checkColsOfMultipleSquaresMissingInRows()
+
+		//Check Columns with multiple empty squares
+		
+		return this.state.squares
+	}
+
+	fillIndividualSquares(){
 		for(var i = 0;i<81;i++){
 			var currentSquare = this.state.squares[i]
 			if(currentSquare === '0'){
@@ -50,39 +65,70 @@ class Solver {
 				}
 			}
 		}
+	}
 
-		//Check Rows with multiple empty squares
-		for(var i = 0;i<9;i++){
-			var index = i*9
-			var row = this.getRow(i)
+	checkColsOfMultipleSquaresMissingInRows(){
+		for(var rowIndex = 0;rowIndex<9;rowIndex++){
+			var firstSquareInRow = rowIndex*9
+			var row = this.getRow(rowIndex)
 			var emptyIs = this.getEmptyIndices(row)
-			for(var current=0;current<emptyIs.length;current++){ 
-				var possibleVals = this.findPossibleValues(index+emptyIs[current])
-				var valSet = false
-				for(var k = 0;k<possibleVals.length;k++){
-					if(!valSet){
-						var val = possibleVals[k]
+			for(var currentSq=0;currentSq<emptyIs.length;currentSq++){ 
+				var possibleVals = this.findPossibleValues(firstSquareInRow+emptyIs[currentSq])
+				var isValSet = false
+				for(var possVal = 0;possVal<possibleVals.length;possVal++){
+					// return [possibleVals, emptyIs, currentSq]
+					if(!isValSet){
+						var val = possibleVals[possVal]
 						var checksum = Array(emptyIs.length).fill(0)
-						checksum[current] = 1
+						checksum[currentSq] = 1
 						for(var j =0;j<emptyIs.length;j++){ 
-							if(j !== current){
-								var col = this.getCol(i)
+							if(j !== currentSq){
+								var col = this.getCol(emptyIs[j])
 								if(col.includes(val)){
 									checksum[j] = 1
 								}
 							}
 						}
-						if(!checksum.inculdes(0)){
-							this.state.squares[i] = val
+						if(!checksum.includes(0)){
+							this.state.squares[firstSquareInRow+emptyIs[currentSq]] = val
+							isValSet = true
 						}
 					}
 				}
 			}
 		}
+		return this.state.squares
+	}
 
-		//Check Columns with multiple empty squares
-		for(var i = 0;i<9;i++){
-
+	checkRowsOfMultipleSquaresMissingInCols(){
+		for(var colIndex = 0;colIndex<9;colIndex++){
+			var firstSquareInRow = colIndex*9
+			var row = this.getRow(colIndex)
+			var emptyIs = this.getEmptyIndices(row)
+			for(var currentSq=0;currentSq<emptyIs.length;currentSq++){ 
+				var possibleVals = this.findPossibleValues(firstSquareInRow+emptyIs[currentSq])
+				var isValSet = false
+				for(var possVal = 0;possVal<possibleVals.length;possVal++){
+					// return [possibleVals, emptyIs, currentSq]
+					if(!isValSet){
+						var val = possibleVals[possVal]
+						var checksum = Array(emptyIs.length).fill(0)
+						checksum[currentSq] = 1
+						for(var j =0;j<emptyIs.length;j++){ 
+							if(j !== currentSq){
+								var col = this.getCol(emptyIs[j])
+								if(col.includes(val)){
+									checksum[j] = 1
+								}
+							}
+						}
+						if(!checksum.includes(0)){
+							this.state.squares[firstSquareInRow+emptyIs[currentSq]] = val
+							isValSet = true
+						}
+					}
+				}
+			}
 		}
 		return this.state.squares
 	}
