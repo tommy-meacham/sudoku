@@ -22,7 +22,7 @@ class Square extends Component {
 	      	className={this.props.className}
 	      	style={{backgroundColor:this.props.bgColor}}
 	      	onChange={this.handleChange}
-	      	value={(this.props.value == "0") ? undefined : this.props.value}
+	      	value={(this.props.value == "0") ? '' : this.props.value}
 	      />
     );
   }

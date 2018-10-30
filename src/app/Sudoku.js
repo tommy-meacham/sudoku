@@ -13,7 +13,9 @@ class Sudoku extends Component {
 
 		var temp = Array(81).fill(0);
 		for(var i=0;i<81;i++){
-			temp[i] = testCase[i]
+			// temp[i] = testCase[i]
+			temp[i] = '0'
+
 		}
 
 		this.state = {
@@ -26,7 +28,9 @@ class Sudoku extends Component {
 
 	solve(){
 		let solver = new Solver();
-		solver.setBoard(this.state.board);
+		var b = this.squaresToBoard()
+		console.log(b)
+		solver.setBoard(b);
 
 		var temp = this.state.squares
 		var solved = solver.solve();
@@ -37,13 +41,33 @@ class Sudoku extends Component {
 
 	}
 
+	squaresToBoard(){
+		var current = this.state.squares
+		var b = ''
+
+		for(var i =0;i<current.length;i++){
+			b = b.concat(current[i])
+		}
+		return b
+	}
+
+	new(){
+		let solver = new Solver();
+		var board = solver.newBoard()
+		for(var i=0;i<81;i++){
+			this.changeSquareValue(i,board[i])
+		}
+
+		this.setState({
+			board:board
+		})
+
+	}
+
 	changeSquareValue(index, value){
 		var current = this.state.squares;
-		if(value == ''){
-			current[index] = undefined;	
-		}else {
-			current[index] = value;
-		}
+		current[index] = value;
+		
 
 		this.setState({
 			squares: current
@@ -183,8 +207,12 @@ class Sudoku extends Component {
 		}
 	}	
 
-	handleClick() {
+	handleSolve() {
 		this.solve();
+	}
+
+	handleNew() {
+		this.new();
 	}
 
 	getBoxIndex(index) {
@@ -219,7 +247,8 @@ class Sudoku extends Component {
     return (
       <div >
         <Board onChange={this.changeSquareValue.bind(this)} squares={s} bgColors={bg}/>
-        <button onClick={this.handleClick.bind(this)}>Solve</button>
+        <button onClick={this.handleSolve.bind(this)}>Solve</button>
+        <button onClick={this.handleNew.bind(this)}>New Board</button>
       </div>
     );
   }
