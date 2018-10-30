@@ -6,7 +6,7 @@ class Solver {
 	constructor(props) {
 		this.state = {
 			squares:Array(81).fill(0),
-			box0:[0,1,2,9,10,11,18,19,23],
+			box0:[0,1,2,9,10,11,18,19,20],
 			box1:[3,4,5,12,13,14,21,22,23],
 			box2:[6,7,8,15,16,17,24,25,26],
 			box3:[27,28,29,36,37,38,45,46,47],
@@ -15,6 +15,7 @@ class Solver {
 			box6:[54,55,56,63,64,65,72,73,74],
 			box7:[57,58,59,66,67,68,75,76,77],
 			box8:[60,61,62,69,70,71,78,79,80],
+			boxIndices: [0,3,6,27,30,33,54,57,60],
 		};
 	}
 
@@ -29,13 +30,14 @@ class Solver {
 	}
 
 	solve() {
-		this.fillIndividualSquares()
+		for(var i=0;i<3;i++){
+			if(this.state.squares.includes('0')){
+				this.fillIndividualSquares()
+				this.checkColsOfMultipleSquaresMissingInRows()
+				this.checkRowsOfMultipleSquaresMissingInCols()
+			}
+		}
 
-		// //Check Rows with multiple empty squares
-		this.checkColsOfMultipleSquaresMissingInRows()
-
-		//Check Columns with multiple empty squares
-		
 		return this.state.squares
 	}
 
@@ -44,7 +46,6 @@ class Solver {
 			var currentSquare = this.state.squares[i]
 			if(currentSquare === '0'){
 				var possibleVals = this.findPossibleValues(i)
-				// return this.findPossibleValues(54)
 				if(possibleVals.length === 1){
 					this.state.squares[i] = possibleVals[0]
 				} else {
@@ -97,40 +98,38 @@ class Solver {
 				}
 			}
 		}
-		return this.state.squares
 	}
 
 	checkRowsOfMultipleSquaresMissingInCols(){
 		for(var colIndex = 0;colIndex<9;colIndex++){
-			var firstSquareInRow = colIndex*9
-			var row = this.getRow(colIndex)
-			var emptyIs = this.getEmptyIndices(row)
+			var firstSquareInRow = colIndex
+			var col = this.getCol(colIndex)
+			var emptyIs = this.getEmptyIndices(col)
 			for(var currentSq=0;currentSq<emptyIs.length;currentSq++){ 
-				var possibleVals = this.findPossibleValues(firstSquareInRow+emptyIs[currentSq])
+				var possibleVals = this.findPossibleValues(firstSquareInRow+9*emptyIs[currentSq])
+
 				var isValSet = false
 				for(var possVal = 0;possVal<possibleVals.length;possVal++){
-					// return [possibleVals, emptyIs, currentSq]
 					if(!isValSet){
 						var val = possibleVals[possVal]
 						var checksum = Array(emptyIs.length).fill(0)
 						checksum[currentSq] = 1
 						for(var j =0;j<emptyIs.length;j++){ 
 							if(j !== currentSq){
-								var col = this.getCol(emptyIs[j])
+								var col = this.getRow(emptyIs[j])
 								if(col.includes(val)){
 									checksum[j] = 1
 								}
 							}
 						}
 						if(!checksum.includes(0)){
-							this.state.squares[firstSquareInRow+emptyIs[currentSq]] = val
+							this.state.squares[firstSquareInRow+9*emptyIs[currentSq]] = val
 							isValSet = true
 						}
 					}
 				}
 			}
 		}
-		return this.state.squares
 	}
 
 	findPossibleValues(index) {
@@ -269,6 +268,75 @@ class Solver {
 			}
 		}
 		return emptyIndices
+	}
+
+	checkBoard(){
+		for(var i = 0; i<9;i++){
+	  		var validRow = this.isRowValid(i);
+	  		var validCol = this.isColumnValid(i);
+	  		var validBox = this.isBoxValid(i);
+
+	  		if(!validRow | !validCol | !validBox){
+	  			return false
+	  		}
+  		}
+  		return true	
+	}
+
+	isRowValid(i){
+		var temp = undefined;
+		var valid = true;
+		const startIndex = i*9;
+		const endIndex = i*9 + 9;
+		temp = this.state.squares.slice(startIndex,endIndex);
+
+		return this.itemsAreAllDifferent(temp);
+	}
+
+	isColumnValid(i){
+		var temp = Array(9).fill(undefined);
+
+		var stateIndex = 0;
+		for (var j = 0; j <=8; j++) {
+			stateIndex = 9*j+i;
+			temp[j] = this.state.squares[stateIndex];
+		}
+		return this.itemsAreAllDifferent(temp);
+	}
+
+	isBoxValid(i){
+		var temp = Array(9).fill(undefined);
+		
+		var stateIndex = 0;
+		var boxStart = this.state.boxIndices[i];
+		var j = 0;
+		for (var row = 0; row <=2; row++) {
+			for (var column = 0; column <=2; column++) {
+				stateIndex = boxStart+(9*row+column);
+				temp[j] = this.state.squares[stateIndex];
+				j++
+			}
+		}
+		return this.itemsAreAllDifferent(temp);
+	}
+
+	itemsAreAllDifferent(temp){
+		var allDifferent = true;
+		for (var i = 0; i <=8; i++) {
+			if(temp[i] === '0'){
+				allDifferent = false
+			}
+			for (var j = i+1; j <=8; j++) {	
+				if(temp[j] === '0'){
+					allDifferent = false
+				}
+				if((temp[i] != temp[j]) == 0){
+					allDifferent = false;
+				}
+			}
+			
+		}
+		return allDifferent;
 	}
 }
 

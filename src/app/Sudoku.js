@@ -8,8 +8,8 @@ class Sudoku extends Component {
 		super(props);
 
 		// var testCase = '004300209005009001070060043006002087190007400050083000600000105003508690042910300'
-		var testCase = '864371259325849761971265843436192587198657432257483916689734125713528694542916378'
-		var testCase = '864371259325849761971265843436192587108607002257483916689734125713528694542916378'
+		// var testCase = '864371259325849761971265843436192587198657432257483916689734125713528694542916378'
+		var testCase = '004300209005009001070060043006002087190007400050083000600000105003508690042910300'
 
 		var temp = Array(81).fill(0);
 		for(var i=0;i<81;i++){
@@ -17,6 +17,7 @@ class Sudoku extends Component {
 		}
 
 		this.state = {
+			board: testCase,
 			squares:temp,
 			boxIndices: [0,3,6,27,30,33,54,57,60],
 			bgColors: Array(81).fill("white"),
@@ -25,7 +26,7 @@ class Sudoku extends Component {
 
 	solve(){
 		let solver = new Solver();
-		solver.setBoard(this.state.squares);
+		solver.setBoard(this.state.board);
 
 		var temp = this.state.squares
 		var solved = solver.solve();
